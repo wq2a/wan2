@@ -1,0 +1,14 @@
+{
+    "require": {
+        "silex/silex": "~2.0",
+        "symfony/security": "^3.1",
+        "doctrine/dbal": "v2.5.4",
+        "symfony/finder": "^3.1",
+        "symfony/dependency-injection": "^3.1",
+        "symfony/security-guard": "^3.1",
+        "monolog/monolog": "^1.22"
+    },
+    "autoload": {
+    	"psr-0": {"Cpm": "src/"}
+    }
+}
