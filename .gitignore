@@ -1,4 +1,5 @@
 vendor
 cache
 .DS_Store
+web/development.log
 

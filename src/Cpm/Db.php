@@ -88,10 +88,14 @@ class Db {
   }
   function rx_error_log($msg)
   {
-    if (is_array($msg) ) {
-      $msg = print_r($msg,1); 
+    /*if (is_array($msg) ) {
+      foreach ($msg as $m ) {
+        error_log( print_r($m,1) ."\n", 3, 'php-errors.log'); 
+      }
     }
-    error_log($msg . "\n", 3, 'php-errors.log');
+    */
+      error_log(print_r($msg,1) . "\n", 3, 'php-errors.log');
+    
   }
   
 }

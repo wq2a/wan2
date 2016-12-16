@@ -9,7 +9,7 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-
+use Cpm\Db;
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
     /**
@@ -21,8 +21,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     */
     public function getCredentials(Request $request)
     {
-        // What you return here will be passed to getUser() as $credentials
-       
         $token = $request->headers->get('X-AUTH-TOKEN');
         if ($token) {
             // no token? Return null and no other methods will be called
@@ -30,8 +28,20 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
                 'token' => $token,
             );
         }
+        // What you return here will be passed to getUser() as $credentials
+         
+        // Handle json post data 
+        if ($request->getContentType() == 'json'){
+            $data = json_decode($request->getContent(), true);
+            $db = new Db();
+            $db->rx_error_log($data);
+            $db->rx_error_log($request->getContent());
+            $db->rx_error_log("content type: " . $request->getContentType());
+            //$request->request->replace(is_array($data) ? $data : array());
+            return $data;
+        }
         
-        // Otherwise check for username and password 
+        // Otherwise regular form data 
         $username = $request->get('username');
         $password = $request->get('password');
        
@@ -85,9 +95,8 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        // on success, let the request continue
-        // Generate token to return and return it
-        return null;
+       
+        //return $token;
     }
 
     /**
