@@ -55,23 +55,15 @@ class Db {
     $config = new \Doctrine\DBAL\Configuration();
     // if have pdo can just add that to params 
     $params = array( 'pdo' => $this->dbPdo($db));
-      // Detailed params to make a pdo 
-      /*
-      'dbname' => 'rxpmi',
-      'user' => 'pmiuser',
-      'password' => 'obamarocks',
-      'host' => 'localhost',
-      'driver' => 'pdo_mysql',
-      'charset' => 'UTF-8'
-      */
-      
+    // Detailed params to make a pdo 
+     
     $conn = \Doctrine\DBAL\DriverManager::getConnection($params, $config);
     return $conn;
   }
 
   function dbPdo($db = 'cpmv') {
-    $user = 'test';
-    $pass = 'pass';
+    $user = 'root';
+    $pass = 'miranda';
     $server = 'localhost';
     $dsn = "mysql:host=".$server . ";dbname=" . $db . ";charset=utf8";
     try {

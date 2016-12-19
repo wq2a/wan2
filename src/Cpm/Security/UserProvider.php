@@ -6,27 +6,36 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Cpm\Db;
-use \PDO;
+use Doctrine\DBAL\Connection;
+use Cpm\UserDb;
+
 class UserProvider implements UserProviderInterface
 {
+    private $conn;
+    private $userDb;
+
+    public function __construct (Connection $conn)
+    {
+        $this->conn = $conn;
+        $this->userDb = new UserDb($conn);
+    }
+
     public function loadUserByUsername($username)
     {
         // make a call to your DB here
-        $db = new Db();
-        $rows = $db->dbQuery('cpmv', "Select * from users_summary where username = ?", array($username));
-        if ($rows) { 
-            $roles = array();
-            foreach ($rows as $r) { 
-                $roles[] = $r['role'];
-            }
-            $r = $rows[0];
-            return new User($r['username'], $r['password'], $r['salt'], $roles);
+        $user = $this->userDb->getUserByName($username);
+        if ($user) { 
+            return $user;
         }
 
         throw new UsernameNotFoundException(
             sprintf('Username "%s" does not exist.', $username)
         );
+    }
+
+    public function addUser(UserInterface &$user)
+    {
+        $user->setId($this->userDb->addUser($user));
     }
 
     public function refreshUser(UserInterface $user)
@@ -43,7 +52,6 @@ class UserProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         return $class === 'Cpm\Security\User';
-        //return $class === 'AppBundle\Security\User\User';
     }
 }
 ?>
