@@ -63,7 +63,7 @@ class Db {
 
   function dbPdo($db = 'cpmv') {
     $user = 'root';
-    $pass = 'miranda';
+    $pass = '';
     $server = 'localhost';
     $dsn = "mysql:host=".$server . ";dbname=" . $db . ";charset=utf8";
     try {
